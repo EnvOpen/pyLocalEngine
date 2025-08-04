@@ -1,0 +1,29 @@
+{
+    "meta": {
+        "version": "1.0.0",
+        "last_updated": "2025-08-04",
+        "description": "Locale file for English (United States)",
+        "locale": "en-US"
+    },
+    "greeting": "Hello",
+    "farewell": "Goodbye",
+    "welcome_message": "Welcome to our application!",
+    "button_labels": {
+        "ok": "OK",
+        "cancel": "Cancel",
+        "save": "Save",
+        "delete": "Delete"
+    },
+    "messages": {
+        "success": "Operation completed successfully",
+        "error": "An error occurred",
+        "loading": "Loading...",
+        "no_data": "No data available"
+    },
+    "navigation": {
+        "home": "Home",
+        "about": "About",
+        "contact": "Contact",
+        "settings": "Settings"
+    }
+}

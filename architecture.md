@@ -75,22 +75,27 @@ optional_category_section:
   about: An optional way to organize a file into sections, this is not required but is recommended for larger files. This does not need to be automatically detected, but should be supported by the engine.
 ```
 ```xml FILENAME = "en-US.xml"
-<meta>
-    <version>1.0.0</version>
-    <last_updated>2023-10-01</last_updated>
-    <description>Locale file for English (United States)</description>
-    <locale>en-US</locale>
-</meta>
-<locale>
-    <field_ID>Field Content</field_ID>
-    <greeting>Hello</greeting>
-    <farewell>Goodbye</farewell>
-    <optional_category_section>
-        <about>An optional way to organize a file into sections, this is not required but is recommended for larger files. This does not need to be automatically detected, but should be supported by the engine.</about>
-    </optional_category_section>
-</locale>
+<?xml version="1.0" encoding="UTF-8"?>
+<LocalEngine>
+    <meta>
+        <version>1.0.0</version>
+        <last_updated>2023-10-01</last_updated>
+        <description>Locale file for English (United States)</description>
+        <locale>en-US</locale>
+    </meta>
+    <locale>
+        <field_ID>Field Content</field_ID>
+        <greeting>Hello</greeting>
+        <farewell>Goodbye</farewell>
+        <optional_category_section>
+            <about>An optional way to organize a file into sections, this is not required but is recommended for larger files. This does not need to be automatically detected, but should be supported by the engine.</about>
+        </optional_category_section>
+    </locale>
+</LocalEngine>
 ```
 The benefit of using XML is that it allows for a metadata section to be included in the file that is separate from the translations, which can be useful for providing additional information about the locale file, such as the version and last updated date. Having it separate from the translations allows for easier parsing and retrieval of translations without having to worry about metadata and vice versa.
+
+More locale file examples can be found in the [locales directory](locales/).
 
 ### More About Metadata
 The metadata section is optional but recommended for all locale files. It MUST support the following fields:
