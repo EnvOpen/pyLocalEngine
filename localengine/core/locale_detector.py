@@ -6,6 +6,7 @@ import locale
 import os
 import platform
 from typing import List, Optional
+import sys
 
 
 class LocaleDetector:
@@ -93,12 +94,13 @@ class LocaleDetector:
     @staticmethod
     def _detect_windows_locale() -> str:
         """Detect locale on Windows systems."""
+        assert sys.platform == "win32", "This method should only be called on Windows"
         try:
             import winreg
 
             # Try to get locale from Windows registry
-            with winreg.OpenKey(  # type: ignore[attr-defined]
-                winreg.HKEY_CURRENT_USER,  # type: ignore[attr-defined]
+            with winreg.OpenKey(
+                winreg.HKEY_CURRENT_USER,
                 r"Control Panel\International",
             ) as key:
                 locale_name = winreg.QueryValueEx(key, "LocaleName")[  # type: ignore[attr-defined]
@@ -112,6 +114,7 @@ class LocaleDetector:
 
     @staticmethod
     def _detect_macos_locale() -> str:
+        assert sys.platform == "darwin", "This method should only be called on macOS"
         """Detect locale on macOS systems."""
         try:
             import subprocess
