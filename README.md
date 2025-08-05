@@ -1,9 +1,8 @@
 # pyLocalEngine
 
-[![Python Version](https://img.shields.io/badge/python-3.8+-blue.svg)](https://python.org)
+[![Python Version](https://img.shields.io/badge/python-3.10+-blue.svg)](https://python.org)
 [![License](https://img.shields.io/badge/license-LGPL--2.1-green.svg)](LICENSE)
-[![Tests](https://img.shields.io/badge/tests-passing-brightgreen.svg)](#testing)
-
+[![CI/CD Pipeline](https://github.com/EnvOpen/pyLocalEngine/actions/workflows/ci.yml/badge.svg)](https://github.com/EnvOpen/pyLocalEngine/actions/workflows/ci.yml)
 The official Python implementation of the LocalEngine localization framework.
 
 ## Overview
