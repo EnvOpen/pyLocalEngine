@@ -14,7 +14,7 @@ def read_readme():
 
 setup(
     name="pyLocalEngine",
-    version="1.0.0",
+    version="0.1.0",
     author="Argo Nickerson",
     author_email="code@envopen.org",
     description="Python implementation of the LocalEngine localization framework",
@@ -48,6 +48,9 @@ setup(
             "black>=22.0.0",
             "isort>=5.10.0",
             "mypy>=1.0.0",
+            "flake8>=6.0.0",
+            "types-requests>=2.25.0",
+            "types-PyYAML>=6.0.0",
         ]
     },
     keywords="localization internationalization i18n l10n locale translation",

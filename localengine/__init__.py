@@ -6,27 +6,27 @@ offering automatic locale detection, dynamic locale switching, offline support,
 and support for JSON, XML, and YAML locale files.
 """
 
-__version__ = "1.0.0"
+__version__ = "0.1.0"
 __author__ = "Argo Nickerson"
 __email__ = "code@envopen.org"
 __license__ = "LGPL-2.1"
 
 from .core.engine import LocalEngine
-from .core.locale_detector import LocaleDetector
-from .core.file_manager import FileManager
 from .core.exceptions import (
+    LocaleFileError,
     LocalEngineError,
     LocaleNotFoundError,
-    LocaleFileError,
-    TranslationKeyError
+    TranslationKeyError,
 )
+from .core.file_manager import FileManager
+from .core.locale_detector import LocaleDetector
 
 __all__ = [
-    'LocalEngine',
-    'LocaleDetector', 
-    'FileManager',
-    'LocalEngineError',
-    'LocaleNotFoundError',
-    'LocaleFileError',
-    'TranslationKeyError'
+    "LocalEngine",
+    "LocaleDetector",
+    "FileManager",
+    "LocalEngineError",
+    "LocaleNotFoundError",
+    "LocaleFileError",
+    "TranslationKeyError",
 ]
