@@ -11,7 +11,7 @@ import os
 import time
 
 from localengine import LocalEngine
-from localengine.core.exceptions import LocaleFileError, LocaleNotFoundError
+from localengine.core.exceptions import LocaleNotFoundError
 
 
 def demo_github_loading():

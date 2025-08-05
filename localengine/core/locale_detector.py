@@ -5,7 +5,7 @@ Locale detection functionality for the LocalEngine framework.
 import locale
 import os
 import platform
-from typing import List, Optional
+from typing import List
 
 
 class LocaleDetector:

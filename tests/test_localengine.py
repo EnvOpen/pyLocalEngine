@@ -4,9 +4,8 @@ Test suite for the pyLocalEngine library.
 
 import json
 import tempfile
-import xml.etree.ElementTree as ET
 from pathlib import Path
-from unittest.mock import MagicMock, patch
+from unittest.mock import patch
 
 import pytest
 import yaml
@@ -14,7 +13,6 @@ import yaml
 from localengine import FileManager, LocaleDetector, LocalEngine
 from localengine.core.exceptions import (
     LocaleFileError,
-    LocalEngineError,
     LocaleNotFoundError,
     TranslationKeyError,
 )

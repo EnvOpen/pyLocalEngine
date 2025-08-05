@@ -22,7 +22,6 @@ def measure_time():
     """Context manager to measure execution time."""
     start = time.perf_counter()
     yield lambda: time.perf_counter() - start
-    end = time.perf_counter() - start
 
 
 def create_test_locale_files(base_path: Path, num_keys: int = 1000):
@@ -69,7 +68,7 @@ def benchmark_engine_creation():
 
     with tempfile.TemporaryDirectory() as temp_dir:
         temp_path = Path(temp_dir)
-        locales = create_test_locale_files(temp_path)
+        create_test_locale_files(temp_path)
 
         times = []
         for _ in range(10):
@@ -122,7 +121,7 @@ def benchmark_translation_lookup():
 
     with tempfile.TemporaryDirectory() as temp_dir:
         temp_path = Path(temp_dir)
-        locales = create_test_locale_files(temp_path, num_keys=10000)
+        create_test_locale_files(temp_path, num_keys=10000)
 
         engine = LocalEngine(base_path=temp_path, auto_detect=False, default_locale="en-US")
 
@@ -221,7 +220,7 @@ def benchmark_cache_performance():
 
     with tempfile.TemporaryDirectory() as temp_dir:
         temp_path = Path(temp_dir)
-        locales = create_test_locale_files(temp_path, num_keys=5000)
+        create_test_locale_files(temp_path, num_keys=5000)
 
         # Test with caching enabled
         engine_cached = LocalEngine(
@@ -268,7 +267,6 @@ def benchmark_concurrent_access():
     print("Benchmarking concurrent access...")
 
     import concurrent.futures
-    import threading
 
     with tempfile.TemporaryDirectory() as temp_dir:
         temp_path = Path(temp_dir)
@@ -283,7 +281,7 @@ def benchmark_concurrent_access():
                 locale = locales[i % len(locales)]
                 with measure_time() as get_time:
                     engine.set_locale(locale)
-                    text = engine.get_text("key_0", default="default")
+                    engine.get_text("key_0", default="default")
                 times.append(get_time())
             return times
 
