@@ -1,0 +1,118 @@
+name: Publish to PyPI
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write  # IMPORTANT: this permission is mandatory for trusted publishing
+      contents: read
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.11"
+
+    - name: Install build dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install build twine
+
+    - name: Verify version consistency
+      run: |
+        # Extract version from pyproject.toml (Python 3.11+ has tomllib built-in)
+        PROJECT_VERSION=$(python -c "
+        try:
+            import tomllib
+        except ImportError:
+            import tomli as tomllib
+        with open('pyproject.toml', 'rb') as f:
+            data = tomllib.load(f)
+        print(data['project']['version'])
+        ")
+        
+        # Extract version from git tag (remove 'v' prefix if present)
+        TAG_VERSION=${GITHUB_REF#refs/tags/}
+        TAG_VERSION=${TAG_VERSION#v}
+        
+        echo "Project version: $PROJECT_VERSION"
+        echo "Tag version: $TAG_VERSION"
+        
+        if [ "$PROJECT_VERSION" != "$TAG_VERSION" ]; then
+          echo "❌ Version mismatch: pyproject.toml has $PROJECT_VERSION but git tag is $TAG_VERSION"
+          exit 1
+        fi
+        echo "✅ Version consistency verified: $PROJECT_VERSION"
+
+    - name: Build package
+      run: |
+        python -m build
+        echo "📦 Built package files:"
+        ls -la dist/
+
+    - name: Verify package integrity
+      run: |
+        twine check dist/*
+        echo "✅ Package integrity verified"
+
+    - name: Test package installation
+      run: |
+        # Test that the built package can be installed and imported
+        pip install dist/*.whl
+        python -c "import localengine; print(f'✅ Package import successful: {localengine.__version__}')"
+
+    - name: Publish to PyPI
+      uses: pypa/gh-action-pypi-publish@release/v1
+      env:
+        TWINE_USERNAME: __token__
+        TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
+
+    - name: Verify PyPI publication
+      run: |
+        # Wait for PyPI to update
+        sleep 60
+        
+        # Create another fresh virtual environment
+        python -m venv verify_env
+        source verify_env/bin/activate
+        
+        # Install from PyPI
+        pip install pyLocalEngine
+        
+        # Verify installation
+        python -c "
+        import localengine
+        print(f'✅ PyPI publication verified: {localengine.__version__}')
+        print('🎉 Package successfully published to PyPI!')
+        "
+
+    - name: Create release summary
+      run: |
+        echo "## 📦 Release Summary" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "✅ **Version**: $(python -c "
+        try:
+            import tomllib
+        except ImportError:
+            import tomli as tomllib
+        with open('pyproject.toml', 'rb') as f:
+            data = tomllib.load(f)
+        print(data['project']['version'])
+        ")" >> $GITHUB_STEP_SUMMARY
+        echo "✅ **Built package**: $(ls dist/*.whl | head -1)" >> $GITHUB_STEP_SUMMARY
+        echo "✅ **PyPI**: Published successfully" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "ℹ️ **Note**: Package was pre-tested on Test PyPI during CI" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "🎉 **pyLocalEngine is now available on PyPI!**" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "\`\`\`bash" >> $GITHUB_STEP_SUMMARY
+        echo "pip install pyLocalEngine" >> $GITHUB_STEP_SUMMARY
+        echo "\`\`\`" >> $GITHUB_STEP_SUMMARY

@@ -56,14 +56,16 @@ print_step "Checking import sorting with isort..."
 isort --check-only localengine tests examples
 print_success "Import sorting check passed"
 
-# Run type checking with mypy (only if Python >= 3.10)
+# Run type checking with mypy (Python 3.10+ required)
 PYTHON_VERSION=$(python3 -c "import sys; print(f'{sys.version_info.major}.{sys.version_info.minor}')")
 if [[ $(echo "$PYTHON_VERSION >= 3.10" | bc -l) -eq 1 ]]; then
     print_step "Running type checking with mypy..."
     mypy localengine
     print_success "Type checking passed"
 else
-    print_step "Skipping mypy (Python $PYTHON_VERSION < 3.10)"
+    print_error "Python $PYTHON_VERSION detected - this project requires Python 3.10+"
+    print_error "Please upgrade to Python 3.10 or later"
+    exit 1
 fi
 
 # Run tests with coverage
@@ -84,11 +86,7 @@ echo "========================================"
 echo "✅ Linting (flake8)"
 echo "✅ Code formatting (black)"
 echo "✅ Import sorting (isort)"
-if [[ $(echo "$PYTHON_VERSION >= 3.10" | bc -l) -eq 1 ]]; then
-    echo "✅ Type checking (mypy)"
-else
-    echo "⏭️  Type checking (skipped - Python $PYTHON_VERSION)"
-fi
+echo "✅ Type checking (mypy)"
 echo "✅ Unit tests"
 echo "✅ Example scripts"
 echo ""

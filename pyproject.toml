@@ -23,15 +23,13 @@ classifiers = [
     "License :: OSI Approved :: GNU Lesser General Public License v2 (LGPLv2)",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.8",
-    "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Topic :: Software Development :: Internationalization",
     "Topic :: Software Development :: Localization",
 ]
-requires-python = ">=3.8"
+requires-python = ">=3.10"
 dependencies = [
     "pyyaml>=6.0",
     "requests>=2.25.0",

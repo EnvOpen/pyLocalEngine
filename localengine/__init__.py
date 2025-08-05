@@ -6,7 +6,7 @@ offering automatic locale detection, dynamic locale switching, offline support,
 and support for JSON, XML, and YAML locale files.
 """
 
-__version__ = "0.1.0"
+__version__ = "1.0.0"
 __author__ = "Argo Nickerson"
 __email__ = "code@envopen.org"
 __license__ = "LGPL-2.1"
