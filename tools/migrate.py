@@ -82,7 +82,7 @@ class LocaleFileMigrator:
         """
         print(f"Migrating gettext .po file: {po_file}")
         
-        locale_data = {
+        locale_data: Dict[str, Any] = {
             "meta": {
                 "version": "1.0.0",
                 "last_updated": datetime.now().strftime("%Y-%m-%d"),

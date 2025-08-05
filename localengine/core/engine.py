@@ -58,7 +58,7 @@ class LocalEngine:
         self._lock = threading.Lock()
         self._update_thread: Optional[threading.Thread] = None
         self._stop_update_thread = threading.Event()
-        self._change_callbacks: List[Callable[[str, str], None]] = []
+        self._change_callbacks: List[Callable[[Optional[str], str], None]] = []
         
         # Initialize locale
         if auto_detect:

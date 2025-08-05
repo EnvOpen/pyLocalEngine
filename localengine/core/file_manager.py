@@ -87,9 +87,9 @@ class FileManager:
         for file_path in file_paths:
             try:
                 if self._is_remote:
-                    return self._load_remote_file(file_path)
+                    return self._load_remote_file(str(file_path))
                 else:
-                    return self._load_local_file(file_path)
+                    return self._load_local_file(Path(file_path))
             except (FileNotFoundError, requests.RequestException):
                 continue
             except Exception as e:

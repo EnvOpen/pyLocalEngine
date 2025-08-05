@@ -12,6 +12,7 @@ import tempfile
 import statistics
 from pathlib import Path
 from contextlib import contextmanager
+from typing import Dict, Any
 from localengine import LocalEngine
 
 
@@ -29,7 +30,7 @@ def create_test_locale_files(base_path: Path, num_keys: int = 1000):
     locales_dir.mkdir()
     
     # Create base translations
-    translations = {
+    translations: Dict[str, Any] = {
         "meta": {
             "version": "1.0.0",
             "locale": "en-US",
@@ -42,7 +43,7 @@ def create_test_locale_files(base_path: Path, num_keys: int = 1000):
         translations[f"key_{i}"] = f"Translation {i}"
     
     # Add nested keys
-    nested = {}
+    nested: Dict[str, Any] = {}
     for i in range(num_keys // 2):
         nested[f"nested_key_{i}"] = f"Nested translation {i}"
     translations["nested"] = nested
@@ -50,7 +51,7 @@ def create_test_locale_files(base_path: Path, num_keys: int = 1000):
     # Create locale files
     locales = ['en-US', 'es-ES', 'fr-FR', 'de-DE', 'ja-JP']
     for locale in locales:
-        locale_data = translations.copy()
+        locale_data: Dict[str, Any] = translations.copy()
         locale_data["meta"]["locale"] = locale
         
         # Modify translations slightly for each locale
