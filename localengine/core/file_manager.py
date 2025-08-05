@@ -87,28 +87,28 @@ class FileManager:
         for file_path in file_paths:
             try:
                 if self._is_remote:
-                    return self._load_remote_file(str(file_path))
+                    return self._load_remote_file(file_path)
                 else:
                     return self._load_local_file(Path(file_path))
             except (FileNotFoundError, requests.RequestException):
                 continue
             except Exception as e:
-                raise LocaleFileError(str(file_path), f"Error parsing file: {str(e)}")
+                raise LocaleFileError(file_path, f"Error parsing file: {str(e)}")
 
         raise LocaleNotFoundError(
             locale, f"No locale file found for '{locale}' in any supported format"
         )
 
-    def _get_possible_file_paths(self, locale: str) -> List[Union[str, Path]]:
+    def _get_possible_file_paths(self, locale: str) -> List[str]:
         """Get list of possible file paths for a locale."""
-        file_paths = []
+        file_paths: List[str] = []
 
         # Method 1: locales/filename.json (required)
         for ext in ["json", "yaml", "yml", "xml"]:
             if self._is_remote:
                 file_paths.append(f"{self.base_path}/locales/{locale}.{ext}")
             else:
-                file_paths.append(self.base_path / "locales" / f"{locale}.{ext}")
+                file_paths.append(str(self.base_path / "locales" / f"{locale}.{ext}"))
 
         # Method 2: locales/localename/filename.json (optional)
         for ext in ["json", "yaml", "yml", "xml"]:
@@ -116,7 +116,9 @@ class FileManager:
                 if self._is_remote:
                     file_paths.append(f"{self.base_path}/locales/{locale}/{filename}.{ext}")
                 else:
-                    file_paths.append(self.base_path / "locales" / locale / f"{filename}.{ext}")
+                    file_paths.append(
+                        str(self.base_path / "locales" / locale / f"{filename}.{ext}")
+                    )
 
         return file_paths
 
@@ -144,9 +146,11 @@ class FileManager:
         """Parse file content based on extension."""
         try:
             if file_ext == ".json":
-                return json.loads(content)
+                data = json.loads(content)
+                return data if isinstance(data, dict) else {}
             elif file_ext in [".yaml", ".yml"]:
-                return yaml.safe_load(content) or {}
+                data = yaml.safe_load(content)
+                return data if isinstance(data, dict) else {}
             elif file_ext == ".xml":
                 return self._parse_xml(content)
             else:
@@ -161,14 +165,15 @@ class FileManager:
     def _parse_xml(self, content: str) -> Dict[str, Any]:
         """Parse XML content into a dictionary."""
         root = ET.fromstring(content)
-        result = {}
+        result: Dict[str, Any] = {}
 
         # Parse metadata section
         meta_elem = root.find("meta")
         if meta_elem is not None:
             result["meta"] = {}
             for child in meta_elem:
-                result["meta"][child.tag] = child.text
+                if child.text is not None:
+                    result["meta"][child.tag] = child.text
 
         # Parse locale section
         locale_elem = root.find("locale")
@@ -177,9 +182,11 @@ class FileManager:
                 if len(child) > 0:  # Has sub-elements (nested structure)
                     result[child.tag] = {}
                     for subchild in child:
-                        result[child.tag][subchild.tag] = subchild.text
+                        if subchild.text is not None:
+                            result[child.tag][subchild.tag] = subchild.text
                 else:
-                    result[child.tag] = child.text
+                    if child.text is not None:
+                        result[child.tag] = child.text
         else:
             # If no locale section, parse all non-meta elements
             for child in root:
@@ -187,9 +194,11 @@ class FileManager:
                     if len(child) > 0:
                         result[child.tag] = {}
                         for subchild in child:
-                            result[child.tag][subchild.tag] = subchild.text
+                            if subchild.text is not None:
+                                result[child.tag][subchild.tag] = subchild.text
                     else:
-                        result[child.tag] = child.text
+                        if child.text is not None:
+                            result[child.tag] = child.text
 
         return result
 

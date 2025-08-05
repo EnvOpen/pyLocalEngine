@@ -5,7 +5,7 @@ Locale detection functionality for the LocalEngine framework.
 import locale
 import os
 import platform
-from typing import List
+from typing import List, Optional
 
 
 class LocaleDetector:
@@ -49,7 +49,7 @@ class LocaleDetector:
             return "en-US"
 
     @staticmethod
-    def _normalize_locale(locale_string: str | None) -> str:
+    def _normalize_locale(locale_string: Optional[str]) -> str:
         """
         Normalize a locale string to the standard format 'language-country'.
 
@@ -94,13 +94,16 @@ class LocaleDetector:
     def _detect_windows_locale() -> str:
         """Detect locale on Windows systems."""
         try:
-            import winreg  # type: ignore
+            import winreg
 
             # Try to get locale from Windows registry
-            with winreg.OpenKey(  # type: ignore (as winreg is not available on my linux system)
-                winreg.HKEY_CURRENT_USER, r"Control Panel\International"  # type: ignore
+            with winreg.OpenKey(  # type: ignore[attr-defined]
+                winreg.HKEY_CURRENT_USER,  # type: ignore[attr-defined]
+                r"Control Panel\International",
             ) as key:
-                locale_name = winreg.QueryValueEx(key, "LocaleName")[0]  # type: ignore
+                locale_name = winreg.QueryValueEx(key, "LocaleName")[  # type: ignore[attr-defined]
+                    0
+                ]
                 return LocaleDetector._normalize_locale(locale_name)
         except (ImportError, OSError, FileNotFoundError):
             pass
