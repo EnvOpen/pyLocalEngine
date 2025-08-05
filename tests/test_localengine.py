@@ -3,9 +3,9 @@ Test suite for the pyLocalEngine library.
 """
 
 import json
+import os
 import tempfile
 from pathlib import Path
-from unittest.mock import patch
 
 import pytest
 import yaml
@@ -41,12 +41,50 @@ class TestLocaleDetector:
         assert "es-ES" in fallbacks
         assert "en-US" in fallbacks
 
-    @patch.dict("os.environ", {"LANG": "fr_FR.UTF-8"})
     def test_detect_system_locale(self):
         """Test system locale detection."""
-        locale = LocaleDetector.detect_system_locale()
-        # Should normalize the environment variable
-        assert locale == "fr-FR"
+        # Test with explicit environment variable patching
+        # We need to ensure that only LANG is set and all higher-priority
+        # locale variables (LC_ALL, LC_MESSAGES) are cleared
+
+        # Store original values to restore later if needed
+        original_env = {}
+        locale_vars = ["LC_ALL", "LC_MESSAGES", "LANG", "LANGUAGE"]
+
+        for var in locale_vars:
+            if var in os.environ:
+                original_env[var] = os.environ[var]
+
+        try:
+            # Clear all locale environment variables first
+            for var in locale_vars:
+                if var in os.environ:
+                    del os.environ[var]
+
+            # Set only LANG to our test value
+            os.environ["LANG"] = "fr_FR.UTF-8"
+
+            # Verify our setup
+            assert os.environ.get("LANG") == "fr_FR.UTF-8"
+            assert "LC_ALL" not in os.environ
+            assert "LC_MESSAGES" not in os.environ
+
+            locale = LocaleDetector.detect_system_locale()
+            # Should normalize the environment variable
+            assert locale == "fr-FR", (
+                f"Expected 'fr-FR', got '{locale}'. Environment check - "
+                f"LANG: {os.environ.get('LANG')}, "
+                f"LC_ALL: {os.environ.get('LC_ALL', 'NOT SET')}, "
+                f"LC_MESSAGES: {os.environ.get('LC_MESSAGES', 'NOT SET')}"
+            )
+
+        finally:
+            # Restore original environment
+            for var in locale_vars:
+                if var in os.environ:
+                    del os.environ[var]
+            for var, value in original_env.items():
+                os.environ[var] = value
 
 
 class TestFileManager:
