@@ -5,8 +5,8 @@ Locale detection functionality for the LocalEngine framework.
 import locale
 import os
 import platform
-from typing import List, Optional
 import sys
+from typing import List, Optional
 
 
 class LocaleDetector:
@@ -99,8 +99,8 @@ class LocaleDetector:
             import winreg
 
             # Try to get locale from Windows registry
-            with winreg.OpenKey(
-                winreg.HKEY_CURRENT_USER,
+            with winreg.OpenKey(  # type: ignore[attr-defined]
+                winreg.HKEY_CURRENT_USER,  # type: ignore[attr-defined]
                 r"Control Panel\International",
             ) as key:
                 locale_name = winreg.QueryValueEx(key, "LocaleName")[  # type: ignore[attr-defined]
