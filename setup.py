@@ -23,7 +23,7 @@ setup(
     url="https://github.com/EnvOpen/pyLocalEngine",
     packages=find_packages(),
     classifiers=[
-        "Development Status :: 5 - Production/Stable",
+        "Development Status :: 4 - Beta",
         "Intended Audience :: Developers",
         "License :: OSI Approved :: GNU Lesser General Public License v2 (LGPLv2)",
         "Operating System :: OS Independent",
