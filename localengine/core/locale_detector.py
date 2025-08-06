@@ -99,13 +99,11 @@ class LocaleDetector:
             import winreg
 
             # Try to get locale from Windows registry
-            with winreg.OpenKey(  # type: ignore[attr-defined]
-                winreg.HKEY_CURRENT_USER,  # type: ignore[attr-defined]
+            with winreg.OpenKey(
+                winreg.HKEY_CURRENT_USER,
                 r"Control Panel\International",
             ) as key:
-                locale_name = winreg.QueryValueEx(key, "LocaleName")[  # type: ignore[attr-defined]
-                    0
-                ]
+                locale_name = winreg.QueryValueEx(key, "LocaleName")[0]
                 return LocaleDetector._normalize_locale(locale_name)
         except (ImportError, OSError, FileNotFoundError):
             pass
