@@ -1,0 +1,29 @@
+{
+    "meta": {
+        "version": "1.0.0",
+        "last_updated": "2025-08-04",
+        "description": "Locale file for Spanish (Spain)",
+        "locale": "es-ES"
+    },
+    "greeting": "Hola",
+    "farewell": "Adiós",
+    "welcome_message": "¡Bienvenido a nuestra aplicación!",
+    "button_labels": {
+        "ok": "Aceptar",
+        "cancel": "Cancelar",
+        "save": "Guardar",
+        "delete": "Eliminar"
+    },
+    "messages": {
+        "success": "Operación completada exitosamente",
+        "error": "Ocurrió un error",
+        "loading": "Cargando...",
+        "no_data": "No hay datos disponibles"
+    },
+    "navigation": {
+        "home": "Inicio",
+        "about": "Acerca de",
+        "contact": "Contacto",
+        "settings": "Configuración"
+    }
+}

@@ -1,0 +1,145 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        python-version: ["3.10", "3.11", "3.12"]
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -e ".[dev]"
+
+    - name: Install flake8
+      run: pip install flake8
+
+    - name: Lint with flake8
+      run: |
+        flake8 localengine tests examples --max-line-length=100 --extend-ignore=E203,W503
+
+    - name: Format check with black
+      run: |
+        black --check localengine tests examples
+
+    - name: Import sort check with isort
+      run: |
+        isort --check-only localengine tests examples
+
+    - name: Type check with mypy
+      run: |
+        mypy localengine
+
+    - name: Test with pytest
+      run: |
+        pytest tests/ -v --cov=localengine --cov-report=xml --cov-report=term
+
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v3
+      with:
+        file: ./coverage.xml
+        flags: unittests
+        name: codecov-umbrella
+
+    - name: Test examples
+      run: |
+        python examples/basic_usage.py
+        python examples/advanced_usage.py
+      env:
+        PYTHONPATH: .
+
+  package-test:
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    permissions:
+      id-token: write  # For trusted publishing to Test PyPI
+      contents: read
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.11"
+
+    - name: Install build dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install build twine
+
+    - name: Build package
+      run: |
+        python -m build
+        echo "📦 Built package files:"
+        ls -la dist/
+
+    - name: Verify package integrity
+      run: |
+        twine check dist/*
+        echo "✅ Package integrity verified"
+
+    - name: Test local package installation
+      run: |
+        # Test that the built package can be installed and imported
+        pip install dist/*.whl
+        python -c "import localengine; print(f'✅ Local package installation successful: {localengine.__version__}')"
+
+    - name: Publish to Test PyPI
+      if: github.repository == 'EnvOpen/pyLocalEngine'
+      continue-on-error: true  # Don't fail CI if Test PyPI upload fails
+      uses: pypa/gh-action-pypi-publish@release/v1
+      with:
+        repository-url: https://test.pypi.org/legacy/
+        skip-existing: true
+      env:
+        TWINE_USERNAME: __token__
+        TWINE_PASSWORD: ${{ secrets.TEST_PYPI_API_TOKEN }}
+
+    - name: Test installation from Test PyPI
+      if: github.repository == 'EnvOpen/pyLocalEngine'
+      continue-on-error: true  # Don't fail CI if Test PyPI installation fails
+      run: |
+        # Wait for the package to be available on Test PyPI
+        sleep 30
+        
+        # Create a fresh virtual environment
+        python -m venv test_env
+        source test_env/bin/activate
+        
+        # Install from Test PyPI (with fallback to regular PyPI for dependencies)
+        pip install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple/ pyLocalEngine || {
+          echo "⚠️ Test PyPI installation failed (this may be expected for existing versions)"
+          exit 0
+        }
+        
+        # Test basic functionality if installation succeeded
+        python -c "
+        try:
+            import localengine
+            print(f'✅ Test PyPI installation verified: {localengine.__version__}')
+            
+            # Quick functionality test
+            engine = localengine.LocalEngine(auto_detect=False)
+            print('✅ Basic functionality test passed')
+        except ImportError as e:
+            print(f'⚠️ Import failed: {e}')
+            exit(0)
+        "

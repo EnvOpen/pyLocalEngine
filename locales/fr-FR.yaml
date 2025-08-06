@@ -1,0 +1,27 @@
+meta:
+  version: "1.0.0"
+  last_updated: "2025-08-04"
+  description: "Locale file for French (France)"
+  locale: "fr-FR"
+
+greeting: "Bonjour"
+farewell: "Au revoir"
+welcome_message: "Bienvenue dans notre application !"
+
+button_labels:
+  ok: "OK"
+  cancel: "Annuler"
+  save: "Enregistrer"
+  delete: "Supprimer"
+
+messages:
+  success: "Opération terminée avec succès"
+  error: "Une erreur s'est produite"
+  loading: "Chargement..."
+  no_data: "Aucune donnée disponible"
+
+navigation:
+  home: "Accueil"
+  about: "À propos"
+  contact: "Contact"
+  settings: "Paramètres"

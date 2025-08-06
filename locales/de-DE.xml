@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+    <meta>
+        <version>1.0.0</version>
+        <last_updated>2025-08-04</last_updated>
+        <description>Locale file for German (Germany)</description>
+        <locale>de-DE</locale>
+    </meta>
+    <locale>
+        <greeting>Hallo</greeting>
+        <farewell>Auf Wiedersehen</farewell>
+        <welcome_message>Willkommen in unserer Anwendung!</welcome_message>
+        <button_labels>
+            <ok>OK</ok>
+            <cancel>Abbrechen</cancel>
+            <save>Speichern</save>
+            <delete>Löschen</delete>
+        </button_labels>
+        <messages>
+            <success>Vorgang erfolgreich abgeschlossen</success>
+            <error>Ein Fehler ist aufgetreten</error>
+            <loading>Laden...</loading>
+            <no_data>Keine Daten verfügbar</no_data>
+        </messages>
+        <navigation>
+            <home>Startseite</home>
+            <about>Über uns</about>
+            <contact>Kontakt</contact>
+            <settings>Einstellungen</settings>
+        </navigation>
+    </locale>
+</root>
