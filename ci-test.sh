@@ -75,8 +75,9 @@ print_success "All tests passed"
 
 # Test examples
 print_step "Testing examples..."
-PYTHONPATH=. python examples/basic_usage.py > /dev/null
-PYTHONPATH=. python examples/advanced_usage.py > /dev/null
+export PYTHONPATH=.
+python examples/basic_usage.py > /dev/null
+python examples/advanced_usage.py > /dev/null
 print_success "Examples executed successfully"
 
 # Final summary
