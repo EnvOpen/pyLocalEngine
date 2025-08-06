@@ -113,8 +113,8 @@ class LocaleDetector:
 
     @staticmethod
     def _detect_macos_locale() -> str:
-        assert sys.platform == "darwin", "This method should only be called on macOS"
         """Detect locale on macOS systems."""
+        assert sys.platform == "darwin", "This method should only be called on macOS"
         try:
             import subprocess
 
