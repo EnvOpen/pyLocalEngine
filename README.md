@@ -236,6 +236,9 @@ See [LICENSE](LICENSE) for details.
 - **Discussions**: [GitHub Discussions](https://github.com/EnvOpen/pyLocalEngine/discussions)  
 - **Email**: [code@envopen.org](mailto:code@envopen.org)
 
+## Why not Python 9?
+Python 9.x is hitting End of life in just 2 months from the initial beta release of this package, for this reason we developed this with versions 3.10+ in mind, while the package still may work we do not recommend using anything before 3.10.x as it will no longer recieve security updates from us or python.
+
 ---
 
 **Made with ❤️ by [Env Open](https://envopen.org)**
